@@ -13,6 +13,10 @@ namespace Eindopdracht.Models
     public class MyDbContext : DbContext
     {
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<RoleModel> Roles { get; set; }
+        public DbSet<ItemModel> Items { get; set; }
+        public DbSet<AuthorModel> Authors { get; set; }
+        public DbSet<CategoryModel> Categories { get; set; }
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
         }
@@ -32,6 +36,11 @@ namespace Eindopdracht.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserModel>();
+            modelBuilder.Entity<RoleModel>();
+            modelBuilder.Entity<ItemModel>();
+            modelBuilder.Entity<AuthorModel>();
+            modelBuilder.Entity<CategoryModel>();
+
             base.OnModelCreating(modelBuilder);
         }
     }
