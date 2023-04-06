@@ -1,15 +1,28 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Eindopdracht.Models
 {
-    public class UserModel
+    [Table("Users")]
+    public partial class UserModel
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
+        [Key]
+        public int Id { get; set; }
+
+        private string? _firstName;
+        [StringLength(50)]
+
+        public string? FirstName { get; set; }
+
+        private string? _lastName;
+        [StringLength(50)]
+
+        public string? LastName { get; set; }
     }
 }
