@@ -26,9 +26,9 @@ namespace Eindopdracht.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("‘Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=MYDB; Integrated Security=Tr" +
-            "ue; Connect Timeout=30; Encrypt=False;  TrustServerCertificate=False; Applicatio" +
-            "nIntent=ReadWrite; MultiSubnetFailover=False’\n")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=MYDB; Integrated Security=Tru" +
+            "e; Connect Timeout=30; Encrypt=False;  TrustServerCertificate=False; Application" +
+            "Intent=ReadWrite; MultiSubnetFailover=False\n")]
         public string ConnectionStrings {
             get {
                 return ((string)(this["ConnectionStrings"]));
