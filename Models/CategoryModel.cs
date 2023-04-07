@@ -14,14 +14,17 @@ namespace Eindopdracht.Models
     [Table("Categories")]
     public partial class CategoryModel
     {
+        //primary key id
         [Key]
         public int Id { get; set; }
 
-        private string? _categoryName;
-        [StringLength(50)]
+        //category name
+         public string? CategoryName { get; set; }
 
-        public string? CategoryName { get; set; }
+        //description
+        public string? Description { get; set; }
 
-        public virtual ObservableCollection<ItemModel> Items { get; set; }
+
+        public virtual ObservableCollection<ItemModel>? Items { get; set; }
     }
 }

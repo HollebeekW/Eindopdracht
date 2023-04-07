@@ -15,14 +15,12 @@ namespace Eindopdracht.Models
         [Key]
         public int Id { get; set; }
 
-        private string? _firstName;
+        //first name
         public string? FirstName { get; set; }
-        [StringLength(50)]
-
-        private string? _lastName;
-        [StringLength(50)]
+        
+        //last name
         public string? LastName { get; set; }
 
-        public virtual ObservableCollection<ItemModel> Items { get; set; }
+        public virtual ObservableCollection<ItemModel>? Items { get; set; }
     }
 }

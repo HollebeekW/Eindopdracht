@@ -19,14 +19,18 @@ namespace Eindopdracht.Models
         public int Id { get; set; }
 
         //name
-        private string? _name;
-        [StringLength(50)]
-        public string? Name { get; set; }
+        public string? Title { get; set; }
+
+        //short description
+        public string? ShortDesc { get; set; }
+
+        //long description
+         public string? LongDesc { get; set; }
 
         //author
-        public virtual AuthorModel Authors { get; set; }
+        public virtual AuthorModel? Authors { get; set; }
 
         //category
-        public virtual CategoryModel Categories { get; set; }
+        public virtual CategoryModel? Categories { get; set; }
     }
 }

@@ -18,12 +18,9 @@ namespace Eindopdracht.Models
         public int Id { get; set; }
 
         //role name
-        private string? _roleName;
-        [StringLength(50)]
-
         public string? RoleName { get; set; }
 
         //user_id
-        public virtual ObservableCollection<UserModel> Users { get; set; }
+        public virtual ObservableCollection<UserModel>? Users { get; set; }
     }
 }
