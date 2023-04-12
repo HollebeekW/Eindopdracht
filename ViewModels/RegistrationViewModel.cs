@@ -6,12 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Eindopdracht.ViewModels
 {
@@ -106,35 +108,59 @@ namespace Eindopdracht.ViewModels
                 };
 
                 try
-                {
-                    //Database connection
+                { 
                     using (var connection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MYDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"))
                     {
-                        //Query to insert users' data into Users table
-                        var query = "INSERT INTO Users (Email,FirstName,Lastname,Password) VALUES (@Email,@FirstName,@LastName,@Password)";
+                        //check if email is already used
+                        var queryCheckEmail = "SELECT * FROM Users WHERE Email = @Email";
 
-                        using (var command = new SqlCommand(query, connection))
+                        using (var commandCheckEmail = new SqlCommand(queryCheckEmail, connection))
                         {
-                            //Change all data types to NVarChar, to match database table
-                            command.Parameters.Add("@Email", System.Data.SqlDbType.NVarChar).Value = User.Email;
-                            command.Parameters.Add("@FirstName", System.Data.SqlDbType.NVarChar).Value = User.FirstName;
-                            command.Parameters.Add("@LastName", System.Data.SqlDbType.NVarChar).Value = User.LastName;
-                            command.Parameters.Add("@Password", System.Data.SqlDbType.NVarChar).Value = User.Password;
+                            commandCheckEmail.Parameters.Add("@Email", System.Data.SqlDbType.NVarChar).Value = User.Email;
+
+                            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(commandCheckEmail);
+                            DataTable dataTable = new DataTable();
+                            sqlDataAdapter.Fill(dataTable);
 
                             connection.Open();
+                            commandCheckEmail.ExecuteNonQuery();
+                            connection.Close();
 
-                            //store amount of added rows in integer "RowsAdded" while executing query
-                            int RowsAdded = command.ExecuteNonQuery();
-
-                            //if RowsAdded > 0 (meaning row was succesfully added) show message
-                            if (RowsAdded > 0)
+                            //if email is already in use, display message
+                            if (dataTable.Rows.Count > 0)
                             {
-                                MessageBox.Show("Account geregistreerd");
+                                MessageBox.Show("Er is al een account met dit email-adres");
                             }
-                            //Show error if row was not added
+                            //if not, continue signup
                             else
                             {
-                                MessageBox.Show("Error");
+                                //Query to insert users' data into Users table
+                                var queryAddUser = "INSERT INTO Users (Email,FirstName,Lastname,Password) VALUES (@Email,@FirstName,@LastName,@Password)";
+
+                                using (var commandAddUser = new SqlCommand(queryAddUser, connection))
+                                {
+                                    //Change all data types to NVarChar, to match database table
+                                    commandAddUser.Parameters.Add("@Email", System.Data.SqlDbType.NVarChar).Value = User.Email;
+                                    commandAddUser.Parameters.Add("@FirstName", System.Data.SqlDbType.NVarChar).Value = User.FirstName;
+                                    commandAddUser.Parameters.Add("@LastName", System.Data.SqlDbType.NVarChar).Value = User.LastName;
+                                    commandAddUser.Parameters.Add("@Password", System.Data.SqlDbType.NVarChar).Value = User.Password;
+
+                                    connection.Open();
+
+                                    //store amount of added rows in integer "RowsAdded" while executing query
+                                    int RowsAdded = commandAddUser.ExecuteNonQuery();
+
+                                    //if RowsAdded > 0 (meaning row was succesfully added) show message
+                                    if (RowsAdded > 0)
+                                    {
+                                        MessageBox.Show("Account geregistreerd");
+                                    }
+                                    //Show error if row was not added
+                                    else
+                                    {
+                                        MessageBox.Show("Error");
+                                    }
+                                }
                             }
                         }
                     }
