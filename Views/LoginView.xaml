@@ -1,12 +1,15 @@
-﻿<Window x:Class="Eindopdracht.Views.LoginView"
+﻿<Window x:Class="Eindopdracht.Views.Login"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eindopdracht.Views"
+        xmlns:VM="clr-namespace:Eindopdracht.ViewModels"
         mc:Ignorable="d"
-        Title="LoginView" Height="450" Width="800">
+        Title="Login" Height="450" Width="800">
+    
     <Grid>
+        <Label Content="Login" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
         
     </Grid>
 </Window>

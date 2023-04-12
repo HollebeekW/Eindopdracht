@@ -19,9 +19,6 @@ namespace Eindopdracht.Views
     /// </summary>
     public partial class LoginView : Window
     {
-        public LoginView()
-        {
-            InitializeComponent();
-        }
+        
     }
 }

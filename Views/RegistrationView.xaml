@@ -4,9 +4,28 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Eindopdracht.Views"
+        xmlns:VM="clr-namespace:Eindopdracht.ViewModels"
         mc:Ignorable="d"
-        Title="RegistrationView" Height="450" Width="800">
+        Title="RegistrationView" Height="500" Width="800">
+    <Window.DataContext>
+        <VM:RegistrationViewModel x:Name="VMRegistration"></VM:RegistrationViewModel>
+    </Window.DataContext>
     <Grid>
-        
+        <Label Content="Registration" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top"/>
+
+        <TextBox Name="Email" TextWrapping="Wrap" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Margin="340,80,230,359" />
+        <TextBox Name="FirstName" TextWrapping="Wrap" Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Margin="340,138,230,299"/>
+        <TextBox Name="LastName" TextWrapping="Wrap" Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Margin="340,195,230,240"/>
+        <TextBox Name="Password" TextWrapping="Wrap" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Margin="340,265,230,174"/>
+        <TextBox Name="ConfirmPassword" TextWrapping="Wrap" Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Margin="340,319,230,120"/>
+        <Label Content="Email-adres:" Margin="198,80,475,359" FontSize="18"/>
+        <Label Content="Voornaam:" Margin="198,138,475,314" FontSize="18"/>
+        <Label Content="Achternaam:" Margin="198,195,475,252" FontSize="18"/>
+        <Label Content="Wachtwoord:" Margin="198,265,475,182" FontSize="18"/>
+        <Label Content="Bevestig Wachtwoord:" Margin="130,319,475,120" FontSize="18"/>
+        <Button Content="Maak account aan" HorizontalAlignment="Center" Margin="0,422,0,0" Command="{Binding AddUserCommand}" VerticalAlignment="Top" Height="40" Width="120"/>
+
+
+
     </Grid>
 </Window>
