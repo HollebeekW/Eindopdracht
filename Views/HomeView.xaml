@@ -11,9 +11,13 @@
         <VM:HomeViewModel x:Name="VMHome"></VM:HomeViewModel>
     </Window.DataContext>
     <Grid>
-        <ListBox d:ItemsSource="{d:SampleData ItemCount=5}" Width="150" Margin="10,67,640,67" Height="300"/>
-        <Label Content="Items" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="150" FontWeight="Bold"/>
-        <Button Content="Item toevoegen" Command="{Binding AddItemCommand}" HorizontalAlignment="Left" Margin="10,372,0,0" VerticalAlignment="Top"/>
+        <ListBox Width="150" Margin="10,67,640,67" Height="300"/>
+        <Label Content="Auteurs" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top" Width="150" FontWeight="Bold"/>
+        <Button Content="Auteur toevoegen" Command="{Binding AddAuthorCommand}" HorizontalAlignment="Left" Margin="182,159,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Name="FirstName" Margin="182,67,0,0" TextWrapping="Wrap" Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Name="LastName" Margin="182,121,0,0" TextWrapping="Wrap" Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Voornaam:" HorizontalAlignment="Left" Margin="182,36,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Achternaam:" HorizontalAlignment="Left" Margin="182,90,0,0" VerticalAlignment="Top" Width="120"/>
 
 
     </Grid>
