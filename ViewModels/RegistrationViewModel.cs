@@ -96,6 +96,12 @@ namespace Eindopdracht.ViewModels
                 MessageBox.Show("Wachtwoorden zijn niet hetzelfde");
             }
 
+            //check if email is valid (contains @ and .)
+            if(!Email.Contains('@') && !Email.Contains('.'))
+            {
+                MessageBox.Show("Vul een geldig email-adres in");
+            }
+
             //If all checks pass, execute query code
             else
             {
