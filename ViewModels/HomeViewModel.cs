@@ -3,6 +3,7 @@ using Eindopdracht.Models;
 using Eindopdracht.Views;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
@@ -24,36 +25,66 @@ namespace Eindopdracht.ViewModels
         public RelayCommand AddAuthorCommand { get; set; }
         public AuthorModel Author { get; set; }
 
-        //bind textboxes to firstname and lastname
+        //bind textboxes to firstName
         private string _firstName;
-        private string _lastName;
-
         public string FirstName
         {
             get { return _firstName; }
             set
             {
                 _firstName = value;
-                OnPropertyChanged(nameof(_firstName));
+                OnPropertyChanged(nameof(FirstName));
             }
         }
 
+        //bind textbox to lastName
+        private string _lastName;
         public string LastName
         {
             get { return _lastName; }
             set
             {
                 _lastName = value;
-                OnPropertyChanged(nameof(_lastName));
+                OnPropertyChanged(nameof(LastName));
+            }
+        }
+
+        //bind list to authors
+        private ObservableCollection<AuthorModel> _authors;
+        public ObservableCollection<AuthorModel> Authors
+        {
+            get { return _authors; }
+            set
+            {
+                _authors = value;
+                OnPropertyChanged(nameof(Authors));
             }
         }
 
         public HomeViewModel()
         {
             Author = new AuthorModel();
+
+            //add author
             AddAuthorCommand = new RelayCommand(AddAuthor);
+
+            //show list of authors
+            List<AuthorModel> authors = LoadAuthorsFromDatabase();
+            Authors = new ObservableCollection<AuthorModel>(authors);
+
+            //update list when new author is added
+            Authors.CollectionChanged += Authors_CollectionChanged;
         }
 
+        private void Authors_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                Authors = new ObservableCollection<AuthorModel>(LoadAuthorsFromDatabase());
+            }
+        }
+
+        //Add Author
         private void AddAuthor()
         {
             //check if textboxes are filled in
@@ -89,6 +120,9 @@ namespace Eindopdracht.ViewModels
                                 contextAddAuthor.SaveChanges();
                             }
 
+                            //add author to list
+                            Authors.Add(newAuthor);
+
                             //show message if successful
                             MessageBox.Show("Auteur toegevoegd");
                         }
@@ -103,6 +137,18 @@ namespace Eindopdracht.ViewModels
                 {
                     MessageBox.Show(e.ToString());
                 }
+            }
+        }
+
+        //Show all authors
+        private List<AuthorModel> LoadAuthorsFromDatabase()
+        {
+
+            var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+
+            using (var contextAuthorList = new MyDbContext(optionsBuilder.Options))
+            {
+                return contextAuthorList.Authors.ToList();
             }
         }
 

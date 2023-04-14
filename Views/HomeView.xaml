@@ -11,7 +11,7 @@
         <VM:HomeViewModel x:Name="VMHome"></VM:HomeViewModel>
     </Window.DataContext>
     <Grid>
-        <ListBox ItemsSource="{Binding Authors}" Width="150" Margin="10,67,640,67" Height="300">
+        <ListBox ItemsSource="{Binding Authors,UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Width="150" Margin="10,67,640,67" Height="300">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
