@@ -21,11 +21,19 @@ namespace Eindopdracht.ViewModels
 {
     public class HomeViewModel : INotifyPropertyChanged
     {
-        //bind button to relaycommand
+        //bind button to add author
         public RelayCommand AddAuthorCommand { get; set; }
+
+        //bind button to add item
+        public RelayCommand AddItemCommand { get; set; }
+
+        //author model
         public AuthorModel Author { get; set; }
 
-        //bind textboxes to firstName
+        //item model
+        public ItemModel Item { get; set; }
+
+         //bind textboxes to firstName
         private string _firstName;
         public string FirstName
         {
@@ -49,6 +57,18 @@ namespace Eindopdracht.ViewModels
             }
         }
 
+        //bind textbox to itemName
+        private string _itemName;
+        public string ItemName
+        {
+            get { return _itemName; }
+            set
+            {
+                _itemName = value;
+                OnPropertyChanged(nameof(ItemName));
+            }
+        }
+
         //bind list to authors
         private ObservableCollection<AuthorModel> _authors;
         public ObservableCollection<AuthorModel> Authors
@@ -61,12 +81,27 @@ namespace Eindopdracht.ViewModels
             }
         }
 
+        //bind list to items
+        private ObservableCollection<ItemModel> _items;
+        public ObservableCollection<ItemModel> Items
+        {
+            get { return _items; }
+            set
+            {
+                _items = value;
+                OnPropertyChanged(nameof(Items));
+            }
+        }
+
         public HomeViewModel()
         {
-            Author = new AuthorModel();
+            
 
             //add author
             AddAuthorCommand = new RelayCommand(AddAuthor);
+
+            //add item
+            AddItemCommand = new RelayCommand(AddItem);
 
             //show list of authors
             List<AuthorModel> authors = LoadAuthorsFromDatabase();
@@ -74,6 +109,12 @@ namespace Eindopdracht.ViewModels
 
             //update list when new author is added
             Authors.CollectionChanged += Authors_CollectionChanged;
+
+            //show list of items
+            List<ItemModel> items = LoadItemsFromDatabase();
+            Items = new ObservableCollection<ItemModel>(items);
+
+            Items.CollectionChanged += Items_CollectionChanged;
         }
 
         private void Authors_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -152,7 +193,61 @@ namespace Eindopdracht.ViewModels
             }
         }
 
+        private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                Items = new ObservableCollection<ItemModel>(LoadItemsFromDatabase());
+            }
+        }
+
+        //Add Item
+        private void AddItem()
+        {
+            if (string.IsNullOrWhiteSpace(ItemName))
+            {
+                MessageBox.Show("Vul iets in");
+            }
+            else
+            {
+                var NewItem = new ItemModel()
+                {
+                    Title = ItemName,
+                };
+
+                try
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+
+                    using (var contextAddItem = new MyDbContext(optionsBuilder.Options))
+                    {
+                        contextAddItem.Items.Add(NewItem);
+                        contextAddItem.SaveChanges();
+                        MessageBox.Show("Item toegevoegd");
+                    }
+
+                    Items.Add(NewItem);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+                
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        //Show all items
+        private List<ItemModel> LoadItemsFromDatabase()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+
+            using (var contextItemList = new MyDbContext(optionsBuilder.Options))
+            {
+                return contextItemList.Items.ToList();
+            }
+        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
