@@ -11,7 +11,7 @@
         <VM:HomeViewModel x:Name="VMHome"></VM:HomeViewModel>
     </Window.DataContext>
     <Grid>
-        <ListBox ItemsSource="{Binding Authors,UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Width="150" Margin="10,67,640,67" Height="300">
+        <ListBox ItemsSource="{Binding Authors}" Width="150" Margin="10,67,640,67" Height="300">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -27,6 +27,19 @@
         <TextBox HorizontalAlignment="Left" Name="LastName" Margin="182,121,0,0" TextWrapping="Wrap" Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" VerticalAlignment="Top" Width="120"/>
         <Label Content="Voornaam:" HorizontalAlignment="Left" Margin="182,36,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Achternaam:" HorizontalAlignment="Left" Margin="182,90,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Verwijder auteur" Command="{Binding DeleteAuthorCommand}" HorizontalAlignment="Left" Margin="182,184,0,0" VerticalAlignment="Top" Width="120"/>
+        <ListBox ItemsSource="{Binding Authors}" Width="150" Margin="400,67,250,67" Height="300">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding ItemName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBox HorizontalAlignment="Left" Name="ItemName" Margin="575,67,0,0" TextWrapping="Wrap" Text="{Binding ItemName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Naam Item:" HorizontalAlignment="Left" Margin="575,36,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Item toevoegen" Command="{Binding AddItemCommand}" HorizontalAlignment="Left" Margin="575,103,0,0" VerticalAlignment="Top" Width="120"/>
 
 
     </Grid>

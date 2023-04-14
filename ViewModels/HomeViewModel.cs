@@ -21,9 +21,14 @@ namespace Eindopdracht.ViewModels
 {
     public class HomeViewModel : INotifyPropertyChanged
     {
-        //bind button to relaycommand
+        //bind button to add author
         public RelayCommand AddAuthorCommand { get; set; }
+
+        //bind button to add item
+        public RelayCommand AddItemCommand { get; set; }
         public AuthorModel Author { get; set; }
+
+        public AuthorModel SelectedAuthor { get; set; }
 
         //bind textboxes to firstName
         private string _firstName;
@@ -49,6 +54,18 @@ namespace Eindopdracht.ViewModels
             }
         }
 
+        //bind textbox to itemName
+        private string _itemName;
+        public string ItemName
+        {
+            get { return _itemName; }
+            set
+            {
+                _itemName = value;
+                OnPropertyChanged(nameof(ItemName));
+            }
+        }
+
         //bind list to authors
         private ObservableCollection<AuthorModel> _authors;
         public ObservableCollection<AuthorModel> Authors
@@ -63,10 +80,13 @@ namespace Eindopdracht.ViewModels
 
         public HomeViewModel()
         {
-            Author = new AuthorModel();
+            
 
             //add author
             AddAuthorCommand = new RelayCommand(AddAuthor);
+
+            //add item
+            AddItemCommand = new RelayCommand(AddItem);
 
             //show list of authors
             List<AuthorModel> authors = LoadAuthorsFromDatabase();
@@ -149,6 +169,39 @@ namespace Eindopdracht.ViewModels
             using (var contextAuthorList = new MyDbContext(optionsBuilder.Options))
             {
                 return contextAuthorList.Authors.ToList();
+            }
+        }
+
+        //Add Item
+        private void AddItem()
+        {
+            if (string.IsNullOrWhiteSpace(ItemName))
+            {
+                MessageBox.Show("Vul iets in");
+            }
+            else
+            {
+                var NewItem = new ItemModel()
+                {
+                    Title = ItemName,
+                };
+
+                try
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+
+                    using (var contextAddItem = new MyDbContext(optionsBuilder.Options))
+                    {
+                        contextAddItem.Items.Add(NewItem);
+                        contextAddItem.SaveChanges();
+                        MessageBox.Show("Item toegevoegd");
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+                
             }
         }
 
