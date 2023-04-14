@@ -20,9 +20,11 @@ namespace Eindopdracht.ViewModels
 {
     public class HomeViewModel : INotifyPropertyChanged
     {
+        //bind button to relaycommand
         public RelayCommand AddAuthorCommand { get; set; }
         public AuthorModel Author { get; set; }
 
+        //bind textboxes to firstname and lastname
         private string _firstName;
         private string _lastName;
 
@@ -54,11 +56,12 @@ namespace Eindopdracht.ViewModels
 
         private void AddAuthor()
         {
+            //check if textboxes are filled in
             if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName))
             {
+                //if any textbox is left empty, show message
                 MessageBox.Show("Vul alle velden in");
             }
-
             else
             {
                 try
@@ -71,10 +74,13 @@ namespace Eindopdracht.ViewModels
 
                     var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
 
+                    //check to prevent duplicate authors from being added
                     using (var contextCheckAuthors = new MyDbContext(optionsBuilder.Options))
                     {
+                        //count rows where author first and last name are the same as inputs from view
                         var count = contextCheckAuthors.Authors.Count(a => a.FirstName == FirstName && a.LastName == LastName);
 
+                        //if no rows found, add author
                         if (count == 0)
                         {
                             using (var contextAddAuthor = new MyDbContext(optionsBuilder.Options))
@@ -83,10 +89,12 @@ namespace Eindopdracht.ViewModels
                                 contextAddAuthor.SaveChanges();
                             }
 
+                            //show message if successful
                             MessageBox.Show("Auteur toegevoegd");
                         }
                         else
                         {
+                            //show message if author already exists
                             MessageBox.Show("Deze auteur is al toegevoegd");
                         }
                     }
