@@ -27,12 +27,11 @@
         <TextBox HorizontalAlignment="Left" Name="LastName" Margin="182,121,0,0" TextWrapping="Wrap" Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" VerticalAlignment="Top" Width="120"/>
         <Label Content="Voornaam:" HorizontalAlignment="Left" Margin="182,36,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Achternaam:" HorizontalAlignment="Left" Margin="182,90,0,0" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Verwijder auteur" Command="{Binding DeleteAuthorCommand}" HorizontalAlignment="Left" Margin="182,184,0,0" VerticalAlignment="Top" Width="120"/>
-        <ListBox ItemsSource="{Binding Authors}" Width="150" Margin="400,67,250,67" Height="300">
+        <ListBox ItemsSource="{Binding Items}" Width="150" Margin="400,67,250,67" Height="300">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <TextBlock Text="{Binding ItemName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+                        <TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

@@ -26,11 +26,14 @@ namespace Eindopdracht.ViewModels
 
         //bind button to add item
         public RelayCommand AddItemCommand { get; set; }
+
+        //author model
         public AuthorModel Author { get; set; }
 
-        public AuthorModel SelectedAuthor { get; set; }
+        //item model
+        public ItemModel Item { get; set; }
 
-        //bind textboxes to firstName
+         //bind textboxes to firstName
         private string _firstName;
         public string FirstName
         {
@@ -78,6 +81,18 @@ namespace Eindopdracht.ViewModels
             }
         }
 
+        //bind list to items
+        private ObservableCollection<ItemModel> _items;
+        public ObservableCollection<ItemModel> Items
+        {
+            get { return _items; }
+            set
+            {
+                _items = value;
+                OnPropertyChanged(nameof(Items));
+            }
+        }
+
         public HomeViewModel()
         {
             
@@ -94,6 +109,12 @@ namespace Eindopdracht.ViewModels
 
             //update list when new author is added
             Authors.CollectionChanged += Authors_CollectionChanged;
+
+            //show list of items
+            List<ItemModel> items = LoadItemsFromDatabase();
+            Items = new ObservableCollection<ItemModel>(items);
+
+            Items.CollectionChanged += Items_CollectionChanged;
         }
 
         private void Authors_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -172,6 +193,14 @@ namespace Eindopdracht.ViewModels
             }
         }
 
+        private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                Items = new ObservableCollection<ItemModel>(LoadItemsFromDatabase());
+            }
+        }
+
         //Add Item
         private void AddItem()
         {
@@ -196,6 +225,8 @@ namespace Eindopdracht.ViewModels
                         contextAddItem.SaveChanges();
                         MessageBox.Show("Item toegevoegd");
                     }
+
+                    Items.Add(NewItem);
                 }
                 catch (Exception e)
                 {
@@ -206,6 +237,17 @@ namespace Eindopdracht.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        //Show all items
+        private List<ItemModel> LoadItemsFromDatabase()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+
+            using (var contextItemList = new MyDbContext(optionsBuilder.Options))
+            {
+                return contextItemList.Items.ToList();
+            }
+        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
