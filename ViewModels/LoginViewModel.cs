@@ -1,10 +1,13 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using Azure.Core;
+using CommunityToolkit.Mvvm.Input;
 using Eindopdracht.Models;
 using Eindopdracht.Views;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Windows;
 
 namespace Eindopdracht.ViewModels
@@ -52,7 +55,7 @@ namespace Eindopdracht.ViewModels
                 MessageBox.Show("Vul alle velden in");
             }
             else
-            {
+            { 
                 User = new UserModel()
                 {
                     Email = Email,
@@ -61,40 +64,32 @@ namespace Eindopdracht.ViewModels
 
                 try
                 {
-                    using (var connection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MYDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"))
+                    var User = new UserModel
                     {
-                        var query = "SELECT * FROM Users WHERE Email=@Email AND Password=@Password";
+                        Email = Email,
+                        Password = Password
+                    };
 
-                        using (var command = new SqlCommand(query, connection))
+                    var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+
+                    using (var context = new MyDbContext(optionsBuilder.Options))
+                    {
+                        //count rows where input email and password match with data in database
+                        var count = context.Users.Count(u => u.Email == Email && u.Password == Password);
+
+                        //if row found open new window
+                        if (count > 0)
                         {
-                            command.Parameters.AddWithValue("@Email", System.Data.SqlDbType.NVarChar).Value = User.Email;
-                            command.Parameters.AddWithValue("@Password", System.Data.SqlDbType.NVarChar).Value = User.Password;
+                            Application.Current.Windows[0].Close();
 
-                            //create datatable with selected rows
-                            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(command);
-                            DataTable dataTable = new DataTable();
-                            sqlDataAdapter.Fill(dataTable);
+                            var AdminPanel = new HomeView();
+                            AdminPanel.Show();
+                        }
 
-                            //open connection, execute query and then close connection
-                            connection.Open();
-                            command.ExecuteNonQuery();
-                            connection.Close();
-
-                            //if row exists for matching email and password, close this window and open new one
-                            if (dataTable.Rows.Count > 0)
-                            {
-                                //close login screen
-                                Application.Current.Windows[1].Close();
-
-                                //open admin panel
-                                var AdminPanel = new HomeView();
-                                AdminPanel.Show();
-                            }
-                            //if no rows found, show message
-                            else
-                            {
-                                MessageBox.Show("Geen gebruiker gevonden");
-                            }
+                        //if no rows found, show message
+                        else
+                        {
+                            MessageBox.Show("Geen gebruiker gevonden");
                         }
                     }
                 }
